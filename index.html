@@ -1,0 +1,52 @@
+ <!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>Infoskjerm</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+    }
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+
+  <script>
+    const PAGES = [
+      { title: "Dagsplan", url: "https://booking.aha.no/dagsplan-sambruk/" },
+      { title: "NRK", url: "https://www.nrk.no/nyheter/" },
+      { title: "Vær Trondheim", url: "https://www.yr.no/nb/innhold/1-211102/table.html?mode=dark" }
+    ];
+
+    const INTERVAL = 40000;
+    let index = 0;
+
+    function showNext() {
+      document.getElementById("frame").src = PAGES[index].url;
+      index = (index + 1) % PAGES.length;
+    }
+
+    window.onload = () => {
+      showNext();
+      setInterval(showNext, INTERVAL);
+    };
+  </script>
+</head>
+
+<body>
+  <iframe id="frame"></iframe>
+</body>
+</html>

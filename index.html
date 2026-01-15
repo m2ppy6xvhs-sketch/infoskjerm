@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="no">
 <head>
   <meta charset="UTF-8">
@@ -24,47 +24,40 @@
     }
   </style>
 
-<script>
-const PAGES = [
-  {
-    title: "Dagsplan Sambruk",
-    url: "https://booking.aha.no/dagsplan-sambruk/"
-  },
-  {
-    title: "NRK Nyheter",
-    url: "https://www.nrk.no/nyheter/"
-  },
-  {
-    title: "Dagsplan Sambruk",
-    url: "https://booking.aha.no/dagsplan-sambruk/"
-  },
-  {
-    title: "Vær – Trondheim",
-    url: "https://www.yr.no/nb/innhold/1-211102/table.html?mode=dark"
-  }
-];
+  <script>
+    const PAGES = [
+      {
+        title: "Dagsplan Sambruk",
+        url: "https://booking.aha.no/dagsplan-sambruk/"
+      },
+      {
+        title: "NRK Nyheter",
+        url: "https://www.nrk.no/nyheter/"
+      },
+      {
+        title: "Dagsplan Sambruk",
+        url: "https://booking.aha.no/dagsplan-sambruk/"
+      },
+      {
+        title: "Vær – Trondheim",
+        url: "https://www.yr.no/nb/innhold/1-211102/table.html?mode=dark"
+      }
+    ];
 
-// ⏱ 30 sek
-const INTERVAL = 30000;
+    const INTERVAL = 30000; // 30 sek
+    let index = 0;
 
-let index = 0;
+    function showNext() {
+      const frame = document.getElementById("frame");
+      frame.src = PAGES[index].url;
+      index = (index + 1) % PAGES.length;
+    }
 
-function showNext() {
-  const frame = document.getElementById("frame");
-  frame.style.transform = "none";
-  frame.style.width = "100%";
-  frame.style.height = "100%";
-
-  frame.src = PAGES[index].url;
-  index = (index + 1) % PAGES.length;
-}
-
-window.onload = () => {
-  showNext();
-  setInterval(showNext, INTERVAL);
-};
-</script>
- 
+    window.onload = () => {
+      showNext();
+      setInterval(showNext, INTERVAL);
+    };
+  </script>
 </head>
 
 <body>

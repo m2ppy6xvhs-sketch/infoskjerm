@@ -21,7 +21,6 @@
       width: 100%;
       height: 100%;
       border: none;
-
     }
   </style>
 
@@ -29,8 +28,8 @@
     const PAGES = [
       {
         title: "Dagsplan Sambruk",
-        url: "https://booking.aha.no/dagsplan-sambruk/"
-        zoom: 0.92   // 👈 justerbar finverdi
+        url: "https://booking.aha.no/dagsplan-sambruk/",
+        zoom: 0.92
       },
       {
         title: "NRK Nyheter",
@@ -38,7 +37,7 @@
       },
       {
         title: "Dagsplan Sambruk",
-        url: "https://booking.aha.no/dagsplan-sambruk/"
+        url: "https://booking.aha.no/dagsplan-sambruk/",
         zoom: 0.92
       },
       {
@@ -47,12 +46,19 @@
       }
     ];
 
-    const INTERVAL = 30000; // 30 sekunder
+    const INTERVAL = 30000; // 30 sek
     let index = 0;
 
     function showNext() {
       const frame = document.getElementById("frame");
-      frame.src = PAGES[index].url;
+      const page = PAGES[index];
+
+      frame.style.zoom = "1";
+      if (page.zoom) {
+        frame.style.zoom = page.zoom;
+      }
+
+      frame.src = page.url;
       index = (index + 1) % PAGES.length;
     }
 

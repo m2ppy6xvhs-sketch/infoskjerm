@@ -25,23 +25,54 @@
   </style>
 
   <script>
-    const PAGES = [
-      { title: "Dagsplan", url: "https://booking.aha.no/dagsplan-sambruk/" },
-      { title: "NRK", url: "https://www.nrk.no/nyheter/" },
-      { title: "Vær Trondheim", url: "https://www.yr.no/nb/innhold/1-211102/table.html?mode=dark" }
-    ];
+const PAGES = [
+  {
+    title: "Dagsplan Sambruk",
+    url: "https://booking.aha.no/dagsplan-sambruk/",
+    scale: 0.85
+  },
+  {
+    title: "NRK Nyheter",
+    url: "https://www.nrk.no/nyheter/",
+    scale: 1
+  },
+  {
+    title: "Dagsplan Sambruk",
+    url: "https://booking.aha.no/dagsplan-sambruk/",
+    scale: 0.85
+  },
+  {
+    title: "Vær – Trondheim",
+    url: "https://www.yr.no/nb/innhold/1-211102/table.html?mode=dark",
+    scale: 1
+  }
+];
 
-    const INTERVAL = 40000;
-    let index = 0;
+// ⏱ 30 sekunder
+const INTERVAL = 30000;
 
-    function showNext() {
-      document.getElementById("frame").src = PAGES[index].url;
-      index = (index + 1) % PAGES.length;
-    }
+let index = 0;
 
-    window.onload = () => {
-      showNext();
-      setInterval(showNext, INTERVAL);
+function applyScale(scale = 1) {
+  const frame = document.getElementById("frame");
+  frame.style.transformOrigin = "0 0";
+  frame.style.transform = `scale(${scale})`;
+  frame.style.width = `${100 / scale}%`;
+  frame.style.height = `${100 / scale}%`;
+}
+
+function showNext() {
+  const page = PAGES[index];
+  applyScale(page.scale || 1);
+  document.getElementById("frame").src = page.url;
+  index = (index + 1) % PAGES.length;
+}
+
+window.onload = () => {
+  showNext();
+  setInterval(showNext, INTERVAL);
+};
+
     };
   </script>
 </head>

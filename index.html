@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>Infoskjerm</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <style>
+    /* Hindrer rulling og fjerner marginer */
     html, body {
       margin: 0;
       padding: 0;
@@ -15,64 +16,100 @@
       overflow: hidden;
     }
 
+    #wrapper {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
     iframe {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+      top: 0;
+      left: 0;
       border: none;
       background: black;
+      transform-origin: 0 0; /* Sikrer at skalering skjer fra øverste venstre hjørne */
     }
   </style>
 
   <script>
+    // Konfigurasjon av sider og rekkefølge
     const PAGES = [
       {
-        title: "Dagsplan Sambruk",
+        title: "1. Dagsplan Sambruk",
         url: "https://booking.aha.no/dagsplan-sambruk/",
-        scale: 0.92
+        virtualWidth: 1920, // Tvinger desktop-visning
+        customScale: 0.95    // Juster ned (f.eks 0.90) hvis kantene kuttes på TV
       },
       {
-        title: "NRK Nyheter",
-        url: "https://www.nrk.no/nyheter/"
+        title: "2. NRK Nyheter",
+        url: "https://www.nrk.no/nyheter/",
+        virtualWidth: null,  // Bruker TV-boksens naturlige bredde
+        customScale: 1.0
       },
       {
-        title: "Dagsplan Sambruk",
+        title: "3. Dagsplan Sambruk",
         url: "https://booking.aha.no/dagsplan-sambruk/",
-        scale: 0.92
+        virtualWidth: 1920,
+        customScale: 0.95
       },
       {
-        title: "Vær – Trondheim",
-        url: "https://www.yr.no/nb/innhold/1-211102/table.html?mode=dark"
+        title: "4. Vær – Trondheim",
+        url: "https://www.yr.no/nb/innhold/1-211102/table.html?mode=dark",
+        virtualWidth: null,
+        customScale: 1.0
       }
     ];
 
-    const INTERVAL = 30000;
+    const INTERVAL = 30000; // 30 sekunder
     let index = 0;
 
-    function applyScale(scale = 1) {
-      const frame = document.getElementById("frame");
-      frame.style.transformOrigin = "0 0";
-      frame.style.transform = `scale(${scale})`;
-      frame.style.width = `${100 / scale}%`;
-      frame.style.height = `${100 / scale}%`;
-    }
-
-    function showNext() {
+    function updateFrame() {
       const page = PAGES[index];
-      applyScale(page.scale || 1);
-      document.getElementById("frame").src = page.url;
+      const frame = document.getElementById("frame");
+      
+      // 1. Last inn ny URL
+      frame.src = page.url;
+
+      // 2. Beregn skalering og størrelse
+      const actualWidth = window.innerWidth;
+      const actualHeight = window.innerHeight;
+      
+      // Hvis virtualWidth er satt (for Booking), bruk den. Ellers bruk skjermens bredde.
+      const vWidth = page.virtualWidth || actualWidth;
+      
+      // Beregn høyde proporsjonalt med skjermforholdet
+      const vHeight = vWidth * (actualHeight / actualWidth);
+
+      // Beregn endelig skalering
+      const finalScale = (actualWidth / vWidth) * (page.customScale || 1);
+
+      // 3. Bruk stilene på iframen
+      frame.style.width = vWidth + "px";
+      frame.style.height = vHeight + "px";
+      frame.style.transform = `scale(${finalScale})`;
+
+      // Gå til neste slide (og start forfra etter den siste)
       index = (index + 1) % PAGES.length;
     }
 
     window.addEventListener("load", () => {
-      showNext();
-      setInterval(showNext, INTERVAL);
+      updateFrame();
+      setInterval(updateFrame, INTERVAL);
+    });
+
+    // Oppdater visningen hvis vinduet endrer størrelse
+    window.addEventListener("resize", () => {
+        // Vi trekker fra 1 på index fordi den allerede er telt opp i updateFrame
+        const currentIndex = (index - 1 + PAGES.length) % PAGES.length;
+        // (Kjører ikke full updateFrame for å unngå at siden laster på nytt ved resize)
     });
   </script>
 </head>
-
 <body>
-  <iframe id="frame"></iframe>
+  <div id="wrapper">
+    <iframe id="frame" scrolling="no"></iframe>
+  </div>
 </body>
 </html>

@@ -26,15 +26,11 @@
   </style>
 
   <script>
-    // =============================
-    // KONFIGURASJON
-    // =============================
-
     const PAGES = [
       {
         title: "Dagsplan Sambruk",
         url: "https://booking.aha.no/dagsplan-sambruk/",
-        scale: 0.92   // juster ved behov (0.90–0.95)
+        scale: 0.92
       },
       {
         title: "NRK Nyheter",
@@ -51,37 +47,23 @@
       }
     ];
 
-    const INTERVAL = 30000; // 30 sekunder
+    const INTERVAL = 30000;
     let index = 0;
-
-    // =============================
-    // FUNKSJONER
-    // =============================
 
     function applyScale(scale = 1) {
       const frame = document.getElementById("frame");
-
       frame.style.transformOrigin = "0 0";
       frame.style.transform = `scale(${scale})`;
-
-      // Kompenser for skalering slik at innhold fyller skjermen
       frame.style.width = `${100 / scale}%`;
       frame.style.height = `${100 / scale}%`;
     }
 
     function showNext() {
-      const frame = document.getElementById("frame");
       const page = PAGES[index];
-
       applyScale(page.scale || 1);
-      frame.src = page.url;
-
+      document.getElementById("frame").src = page.url;
       index = (index + 1) % PAGES.length;
     }
-
-    // =============================
-    // START
-    // =============================
 
     window.addEventListener("load", () => {
       showNext();
